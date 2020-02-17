@@ -1,6 +1,11 @@
 /* thanks old college classmate Sean Anderson!
  * http://graphics.stanford.edu/~seander/bithacks.html#DetermineIfPowerOf2
  */
+ #define NUMQUEENS 2
+ #define BOARDSIZE 4
+
+
+
 __device__
 int countBits(int v) {
     int c; // c accumulates the total bits set in v
@@ -9,6 +14,22 @@ int countBits(int v) {
     }
     return c;
 }
+
+
+__device__
+bool checkerFunc (int[] queensList,int n, int a){
+
+    //max we can do is 32 x 32
+    int in_check_arr[32] ={0};
+    for (int lk =0; lk<32;lk ++){
+        printf("%d\n", in_check_arr[lk]);
+    }
+
+
+
+}
+
+
 
 __global__
 void qgdKernel(int n, int a, bool one, bool all, int pitch,
@@ -32,6 +53,10 @@ void qgdKernel(int n, int a, bool one, bool all, int pitch,
     if (bitcount != a) { return; }
 
     int in_check = 0;           // start with no squares in check
+
+    int queensList[NUMQUEENS] = {4,13}; 
+    bool result = checkerFunc(queensList, BOARDSIZE, NUMQUEENS);
+
     int loc;
     for (loc = 0; loc < n*n; loc++) { // iterate over possible queen locations
         int queen = 1 << loc;

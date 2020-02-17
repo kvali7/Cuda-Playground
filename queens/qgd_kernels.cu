@@ -17,15 +17,33 @@ int countBits(int v) {
 
 
 __device__
-bool checkerFunc (int[] queensList,int n, int a){
-
+bool checkerFunc (int[] queensList,int boardSize, int numQueens){
+    bool ifCheck = false;
     //max we can do is 32 x 32
-    int in_check_arr[32] ={0};
-    for (int lk =0; lk<32;lk ++){
-        printf("%d\n", in_check_arr[lk]);
+    unint32_t in_checkArr[32] ={0};
+
+    //print all
+    for (int lk = 0; lk < boardSize; lk ++){
+        printf("%d\n", in_checkArr[lk]);
+        
     }
 
+    for (int queen = 0; queen <= numQueens; queen++){
+        int pos = queensList[queen];
+        in_checkArr[pos/boardSize] = 1 << pos % boardSize;
+        
+        //row
+        in_checkArr
 
+        //column
+
+        
+        //diagons
+
+
+    }
+
+    return ifCheck;
 
 }
 

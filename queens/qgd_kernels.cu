@@ -73,22 +73,23 @@
   
       // if we've reached this point, we have a valid board with configuration tid
       // printf("%x\n", tid);
+      unsigned int* solution;
+    //   // claim one of the valid solutions
+    //   int solution_id = atomicAdd(count, 1);
   
-      // claim one of the valid solutions
-      int solution_id = atomicAdd(count, 1);
+    //   // the below line sets solution = d_solution[solution_id]
+    //   unsigned int* solution =
+    //       (unsigned int *) ((char *) d_solution + solution_id * pitch);
   
-      // the below line sets solution = d_solution[solution_id]
-      unsigned int * solution =
-          (unsigned int *) ((char *) d_solution + solution_id * pitch);
-  
-      // solution is of the form [a,b] where a<b and each number
-      // is an index of a queen into the 1-dimensional n*n-element chessboard
-      int i, c, k;
-      for (i = 0, c = tid, k = 0; c != 0; i++, c >>= 1) {
-          if (c & 1) {
-              solution[k++] = i;
-          }
-      }
+    //   // solution is of the form [a,b] where a<b and each number
+    //   // is an index of a queen into the 1-dimensional n*n-element chessboard
+    //   int i, c, k;
+    //   for (i = 0, c = tid, k = 0; c != 0; i++, c >>= 1) {
+    //       if (c & 1) {
+    //           solution[k++] = i;
+    //       }
+    //   }
+      solution = addSolution (tid, d_solution, count, pitch);
   }
   
   // Store your solutions in d_solution, which has already been allocated for you

@@ -127,6 +127,7 @@ int main(int argc, char** argv) {
     }
 
     // clean up memory
+    // for 2x2 we don't need to free (h_solutions) at the end
     free(h_solutions);
     CUDA_SAFE_CALL(cudaFree(d_solutions));
     cudaFree(count);

@@ -34,7 +34,7 @@
   
 
       int numQueens = NUMQUEENS;
-      int boardSize = BOARDSIZE;
+      int width = BOARDSIZE;
       // create queens List for n = 4 the size of the proposed solution is 2
      unsigned int queensList[NUMQUEENS] = {0};
      int temp = tid;
@@ -92,7 +92,7 @@
     //       }
     //   }
     
-    if (checkerFunc (queensList, boardSize, numQueens)) 
+    if (checkerFunc (queensList, width, numQueens)) 
         addSolution (queensList,  numQueens, d_solution, count, pitch);
   }
   

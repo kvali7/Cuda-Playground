@@ -5,10 +5,11 @@
 
  #include "checker_helper.cu"
 
+//  #define BOARDSIZE 5
+//  #define NUMQUEENS 3
+ 
  #define BOARDSIZE 4
  #define NUMQUEENS 2
- 
-
  
   __global__
   void qgdKernel(int n, int a, bool one, bool all, int pitch,
@@ -43,7 +44,7 @@
              qi++;
          }
      }
-     if (!checkerFunc (queensList, boardSize, numQueens)) {return;}
+    //  if (!checkerFunc (queensList, boardSize, numQueens)) {return;}
  
  
     //   int in_check = 0;           // start with no squares in check
@@ -90,28 +91,31 @@
     //           solution[k++] = i;
     //       }
     //   }
-    addSolution (queensList,  numQueens, d_solution, count, pitch);
+    
+    if (checkerFunc (queensList, boardSize, numQueens)) 
+        addSolution (queensList,  numQueens, d_solution, count, pitch);
   }
   
   // Store your solutions in d_solution, which has already been allocated for you
   void qgd(int n, int a, bool one, bool all, int pitch,
            unsigned long long numSolutions, unsigned int * d_solution,
            unsigned int * count) {
-      if (one) {
-          fprintf(stderr, "Instructor's solution only works for -all\n");
-          exit(42);
-      }
-      if (n != 4) {
-          fprintf(stderr, "Instructor's solution only works for n=4\n");
-          exit(4);
-      }
-      if (a != 2) {
-          fprintf(stderr, "Instructor's solution only works for a=2\n");
-          exit(2);
-      }
+    //   if (one) {
+    //       fprintf(stderr, "Instructor's solution only works for -all\n");
+    //       exit(42);
+    //   }
+    //   if (n != 4) {
+    //       fprintf(stderr, "Instructor's solution only works for n=4\n");
+    //       exit(4);
+    //   }
+    //   if (a != 2) {
+    //       fprintf(stderr, "Instructor's solution only works for a=2\n");
+    //       exit(2);
+    //   }
   
       // there are 2^16 possible configurations of queens on a 4x4 chessboard
       // 2^8 blocks of 2^8 threads each will check them all (brute force)
       qgdKernel<<< 1<<8, 1<<8 >>>(n, a, one, all, pitch, d_solution, count);
+    //   qgdKernel<<< 1<<10, 1<<15 >>>(n, a, one, all, pitch, d_solution, count);
   }
   

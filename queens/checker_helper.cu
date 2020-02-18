@@ -1,5 +1,3 @@
-
-
 __device__
 int countBits(unsigned int v) {
     int c; // c accumulates the total bits set in v

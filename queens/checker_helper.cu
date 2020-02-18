@@ -10,7 +10,7 @@ int countBits(unsigned int v) {
 }
 
 __device__
-bool checkerFunc (int* queensList,int width, int numQueens){
+bool checkerFunc (unsigned int* queensList,int width, int numQueens){
     ////input exceptions
     // if (numQueens > width){
     //     printf("The Number of Queens is greater than width of the board\n");
@@ -18,8 +18,8 @@ bool checkerFunc (int* queensList,int width, int numQueens){
     bool ifCheck = true;
     ////max we can do is 32 x 32
     unsigned int in_checkArr[32] ={0};
-    for (int queen = 0; queen < numQueens; queen++){
-        int posqueen = queensList[queen];
+    for (int q = 0; q < numQueens; q++){
+        int posqueen = queensList[q];
         // if (posqueen < 0 || posqueen >= width * width){
         //     printf("The position  of Queen is invalid\n");
         // }
@@ -36,7 +36,7 @@ bool checkerFunc (int* queensList,int width, int numQueens){
             ////other diagon
             if (col - row + r >= 0 && col - row + r < width) 
                 in_checkArr[r] |=1 << col - row + r;
-            if (countBits(in_checkArr[r]) < width && queen == numQueens - 1)
+            if (countBits(in_checkArr[r]) < width && q == numQueens - 1)
                 ifCheck = false;
         }
     }
@@ -45,7 +45,7 @@ bool checkerFunc (int* queensList,int width, int numQueens){
 }
 
 __device__
-unsigned int* addSolution (int tid, unsigned int* d_solution, unsigned int* count, int pitch){
+unsigned int* addSolution (unsigned int* queensList, int numQueens, unsigned int* d_solution, unsigned int* count, int pitch){
     // claim one of the valid solutions
     int solution_id = atomicAdd(count, 1);
 
@@ -55,11 +55,9 @@ unsigned int* addSolution (int tid, unsigned int* d_solution, unsigned int* coun
 
     // solution is of the form [a,b] where a<b and each number
     // is an index of a queen into the 1-dimensional n*n-element chessboard
-    int i, c, k;
-    for (i = 0, c = tid, k = 0; c != 0; i++, c >>= 1) {
-        if (c & 1) {
-            solution[k++] = i;
-        }
+    for (int q = 0 ; q < numQueens; q++){
+        solution[q] = queensList[q];
     }
+
     return solution;
 }

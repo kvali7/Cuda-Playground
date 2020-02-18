@@ -32,16 +32,18 @@
       if (bitcount != a) { return; }
   
 
+      int numQueens = NUMQUEENS;
+      int boardSize = BOARDSIZE;
       // create queens List for n = 4 the size of the proposed solution is 2
-     int queensList[BOARDSIZE] = {0};
+     unsigned int queensList[NUMQUEENS] = {0};
      int temp = tid;
-     for (int c = 0, qi = 0 ; temp ; temp >>= 1, c++){
+     for (unsigned int c = 0, qi = 0 ; temp ; temp >>= 1, c++){
          if (temp & 1){
              queensList[qi] = c;
              qi++;
          }
      }
-     if (!checkerFunc (queensList, BOARDSIZE, NUMQUEENS)) {return;}
+     if (!checkerFunc (queensList, boardSize, numQueens)) {return;}
  
  
     //   int in_check = 0;           // start with no squares in check
@@ -73,7 +75,6 @@
   
       // if we've reached this point, we have a valid board with configuration tid
       // printf("%x\n", tid);
-      unsigned int* solution;
     //   // claim one of the valid solutions
     //   int solution_id = atomicAdd(count, 1);
   
@@ -89,7 +90,7 @@
     //           solution[k++] = i;
     //       }
     //   }
-      solution = addSolution (tid, d_solution, count, pitch);
+    addSolution (queensList,  numQueens, d_solution, count, pitch);
   }
   
   // Store your solutions in d_solution, which has already been allocated for you

@@ -3,47 +3,12 @@
  * http://graphics.stanford.edu/~seander/bithacks.html#DetermineIfPowerOf2
  */
 
+ #include "checker_helper.cu"
+
  #define BOARDSIZE 4
  #define NUMQUEENS 2
  
- __device__
-int countBits(unsigned int v, int boardSize) {
-    int c; // c accumulates the total bits set in v
-    for (c = 0; v; v >>= 1) {
-        c += v & 1;
-    }
-    return c;
-}
- 
- 
- __device__
- bool checkerFunc (int* queensList,int boardSize, int numQueens){
-    // int queensList[NUMQUEENS] = {2,17,22};
-     bool ifCheck = true;
-     //max we can do is 32 x 32
-     unsigned int in_checkArr[32] ={0};
-     for (int queen = 0; queen < numQueens; queen++){
-         int posqueen = queensList[queen];
-         int row = posqueen/boardSize;
-         int col = posqueen % boardSize;
-         //row easy!
-         in_checkArr[row] |=  0xffffffff;
-         for (int r = 0; r < boardSize; r++){
-             // column in loop
-             in_checkArr[r] |=  1 << col;
-             // main diagon
-             if (row + col - r < boardSize && row + col -r >= 0) 
-                 in_checkArr[r] |=  1 << row + col - r;
-             // other diagon
-             if (col - row + r >= 0 && col - row + r < boardSize) 
-                 in_checkArr[r] |=1 << col - row + r;
-             if (countBits(in_checkArr[r], boardSize) < boardSize && queen == numQueens - 1)
-                 ifCheck = false;
-         }
-     }
- 
-     return ifCheck; 
- }
+
  
   __global__
   void qgdKernel(int n, int a, bool one, bool all, int pitch,
@@ -63,7 +28,7 @@ int countBits(unsigned int v, int boardSize) {
       // do not do this to scale to more chessboards
   
       // we know that for n=4, a=2, so knock out all boards where a != 2
-      int bitcount = countBits(tid,17);
+      int bitcount = countBits(tid);
       if (bitcount != a) { return; }
   
 

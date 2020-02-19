@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 
     // allocate memory
     unsigned int * h_solutions;
-    // h_solutions = (unsigned int *) malloc(numSolutions * a * sizeof(unsigned int));
+    h_solutions = (unsigned int *) malloc(numSolutions * a * sizeof(unsigned int));
     unsigned int * d_solutions;
     unsigned int * count;
     cudaMallocManaged(&count, sizeof(unsigned int));
@@ -81,9 +81,9 @@ int main(int argc, char** argv) {
     size_t dpitch;
     // height is number of solutions
     // width is items per solution
-    // CUDA_SAFE_CALL(cudaMallocPitch(&d_solutions, &dpitch,
-    //                                a * sizeof(unsigned int),
-    //                                numSolutions));
+    CUDA_SAFE_CALL(cudaMallocPitch(&d_solutions, &dpitch,
+                                   a * sizeof(unsigned int),
+                                   numSolutions));
     float elapsedTime;
     cudaDeviceSynchronize();
     cudaEventRecord(start, 0);
@@ -93,6 +93,10 @@ int main(int argc, char** argv) {
     cudaEventElapsedTime(&elapsedTime, start, stop);
 
     size_t hpitch = n * sizeof(unsigned int);
+    // printf("preassigned size of h_solutions is %d\n", sizeof(h_solutions));
+    // unsigned int* tempv = (unsigned int *) malloc(30);
+    // printf("psize of rand int is %d\n", sizeof(tempv));
+    // printf(" dpitch is %d\n hpitch is %d\n numSolutions is %d\n sizeof d_solutions is %d\n", dpitch, hpitch, numSolutions, sizeof(d_solutions));
     // CUDA_SAFE_CALL(cudaMemcpy2D(h_solutions, hpitch, d_solutions, dpitch,
     //                             a * sizeof(unsigned int), // width
     //                             numSolutions,                // height
@@ -106,7 +110,8 @@ int main(int argc, char** argv) {
         printf("All %d solutions found!\n", numSolutions);
     else
         printf("There is %d solutions and only %d is found  \n", numSolutions, count);
-    // print answers
+        
+    // // print answers
     // for (int i = 0; i < numSolutions; i++) {
     //     unsigned int * solution = &h_solutions[i * n];
     //     // i is which solution
@@ -133,7 +138,9 @@ int main(int argc, char** argv) {
 
     // clean up memory
     // for 2x2 we don't need to free (h_solutions) at the end
-    // free(h_solutions);
-    // CUDA_SAFE_CALL(cudaFree(d_solutions));
+    // if (sizeof(h_solutions) > 32 )
+        // free(h_solutions);
+    // if (sizeof(d_solutions) > 32)
+         CUDA_SAFE_CALL(cudaFree(d_solutions));
     cudaFree(count);
 }

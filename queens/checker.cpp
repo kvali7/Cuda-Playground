@@ -1,18 +1,54 @@
+
+#include <fstream>
+#include <string>
+
+using namespace std;
+
 #include <stdio.h>
 #include <iostream>
+#define BOARDSIZE 8
+#define NUMQUEENS 5
 
-
-
-#define BOARDSIZE 5
-#define NUMQUEENS 3
-
-int countBits(unsigned int v, int boardSize) {
-    int c ;
-    int i;
-    for (c = 0, i = 0; v; v >>= 1, i++) {
+int countBits(unsigned int v) {
+    int c; // c accumulates the total bits set in v
+    for (c = 0; v; v >>= 1) {
         c += v & 1;
     }
     return c;
+}
+
+bool checkerFunc (int* queensList,int width, int numQueens){
+    ////input exceptions
+    // if (numQueens > width){
+    //     printf("The Number of Queens is greater than width of the board\n");
+    // }
+    bool ifCheck = true;
+    ////max we can do is 32 x 32
+    unsigned int in_checkArr[32] ={0};
+    for (int q = 0; q < numQueens; q++){
+        int posqueen = queensList[q];
+        // if (posqueen < 0 || posqueen >= width * width){
+        //     printf("The position  of Queen is invalid\n");
+        // }
+        int row = posqueen/width;
+        int col = posqueen % width;
+        ////row easy!
+        in_checkArr[row] |=  0xffffffff;
+        for (int r = 0; r < width; r++){
+            ////column in loop
+            in_checkArr[r] |=  1 << col;
+            ////main diagon
+            if (row + col - r < width && row + col -r >= 0) 
+                in_checkArr[r] |=  1 << row + col - r;
+            ////other diagon
+            if (col - row + r >= 0 && col - row + r < width) 
+                in_checkArr[r] |=1 << col - row + r;
+            if (countBits(in_checkArr[r]) < width && q == numQueens - 1)
+                ifCheck = false;
+        }
+    }
+
+    return ifCheck; 
 }
 
 
@@ -41,36 +77,22 @@ int printChess (unsigned int in_checkArr[]){
 }
 
 int main(void){
-    int boardSize = BOARDSIZE;
+    int width = BOARDSIZE;
     int numQueens = NUMQUEENS;
-    int queensList[NUMQUEENS] = {2,17,22};
-    bool ifCheck = true;
-    //max we can do is 32 x 32
-    unsigned int in_checkArr[32] ={0};
+    int config[NUMQUEENS] = {0};
+    // int list[NUMQUEENS] = {   0	,   2	 ,  3	,  16	 , 51};
+    int list[NUMQUEENS] = {   4	,   27	 ,  33	,  56	 , 55};
+    bool ifCheck;
+    
 
-    for (int queen = 0; queen < numQueens; queen++){
-        int posqueen = queensList[queen];
-        int row = posqueen / boardSize;
-        int col = posqueen % boardSize;
-        //queen pos
-        in_checkArr[row] |= 1 << col;
-        //row easy!
-        in_checkArr[row] |=  0xffffffff;
-        for (int r = 0; r < boardSize; r++){
-            // column in loop
-            in_checkArr[r] |=  1 << col;
-            // main diagon
-            if (row + col - r < boardSize && row + col -r >= 0) 
-                in_checkArr[r] |=  1 << row + col - r;
-            // other diagon
-            if (col - row + r >= 0 && col - row + r < boardSize) 
-                in_checkArr[r] |=1 << col - row + r;
-            if (countBits(in_checkArr[r], boardSize) < boardSize && queen == numQueens - 1)
-                ifCheck = false;
-        }
-    }
+    // read a line from file  in while loop
+        // read elements form the line to config array 5 elements
+        for (int q=0; q< numQueens; q++)
+            config[q] = list[q];
 
-    printf("result = %d\n", ifCheck);
+        ifCheck = checkerFunc (config, width, numQueens);
+        printf("result = %d\n", ifCheck);
+    //
     return 0;
 }
 

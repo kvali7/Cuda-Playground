@@ -48,8 +48,7 @@ unsigned int* addSolution (unsigned int* queensList, int numQueens, unsigned int
     int solution_id = atomicAdd(count, 1);
 
     // the below line sets solution = d_solution[solution_id]
-    unsigned int* solution =
-        (unsigned int*) ((char*) d_solution + solution_id * pitch);
+    unsigned int* solution = (unsigned int*) ((char*) d_solution + solution_id * pitch);
 
     // solution is of the form [a,b] where a<b and each number
     // is an index of a queen into the 1-dimensional n*n-element chessboard

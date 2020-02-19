@@ -9,7 +9,8 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-#include "qgd_kernels.cu"
+// #include "qgd_kernels.cu"
+#include "qgd_kernels2.cu"
 
 #define CUDA_SAFE_CALL_NO_SYNC( call) do {                              \
   cudaError err = call;                                                 \

@@ -43,18 +43,19 @@ bool checkerFunc (unsigned int* queensList,int width, int numQueens){
 }
 
 __device__
-unsigned int* addSolution (unsigned int* queensList, int numQueens, unsigned int* d_solution, unsigned int* count, int pitch){
+void addSolution (unsigned int* queensList, int numQueens, unsigned int* d_solution, unsigned int* count, int pitch){
     // claim one of the valid solutions
     int solution_id = atomicAdd(count, 1);
+    printf("count = %d\n", solution_id);
 
-    // the below line sets solution = d_solution[solution_id]
-    unsigned int* solution = (unsigned int*) ((char*) d_solution + solution_id * pitch);
+    // // the below line sets solution = d_solution[solution_id]
+    // unsigned int* solution = (unsigned int*) ((char*) d_solution + solution_id * pitch);
 
-    // solution is of the form [a,b] where a<b and each number
-    // is an index of a queen into the 1-dimensional n*n-element chessboard
-    for (int q = 0 ; q < numQueens; q++){
-        solution[q] = queensList[q];
-    }
+    // // solution is of the form [a,b] where a<b and each number
+    // // is an index of a queen into the 1-dimensional n*n-element chessboard
+    // for (int q = 0 ; q < numQueens; q++){
+    //     solution[q] = queensList[q];
+    // }
 
-    return solution;
+    // return solution;
 }

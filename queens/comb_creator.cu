@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 
-__device__
+__device__ //mCk
 int combin(int m, int k ){
     unsigned long int comb = 1;
     if (m > 0 && k > 0 ) {
@@ -17,14 +17,14 @@ int combin(int m, int k ){
 }
 
 __device__
-void queenGen(unsigned int* queensList, int i, int m, int k){
+void queenGen(unsigned int* queensList, unsigned long long int i, int m, int k){
     int q = 0;
-    int r = i +1;
+    unsigned long long int r = i +1;
     int j = 0;
     for (int s = 1; s < k + 1; s++){
         int cs = j+1;
         int com = combin(m-cs,k-s);
-        while ((r - com)>0){
+        while (r > com){
             r -= com;
             cs += 1;
             com = combin(m-cs,k-s);

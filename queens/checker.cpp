@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 
-using namespace std;
 
 #include <stdio.h>
 #include <iostream>

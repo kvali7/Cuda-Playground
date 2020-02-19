@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 
     // allocate memory
     unsigned int * h_solutions;
-    h_solutions = (unsigned int *) malloc(numSolutions * a * sizeof(unsigned int));
+    // h_solutions = (unsigned int *) malloc(numSolutions * a * sizeof(unsigned int));
     unsigned int * d_solutions;
     unsigned int * count;
     cudaMallocManaged(&count, sizeof(unsigned int));
@@ -81,9 +81,9 @@ int main(int argc, char** argv) {
     size_t dpitch;
     // height is number of solutions
     // width is items per solution
-    CUDA_SAFE_CALL(cudaMallocPitch(&d_solutions, &dpitch,
-                                   a * sizeof(unsigned int),
-                                   numSolutions));
+    // CUDA_SAFE_CALL(cudaMallocPitch(&d_solutions, &dpitch,
+    //                                a * sizeof(unsigned int),
+    //                                numSolutions));
     float elapsedTime;
     cudaDeviceSynchronize();
     cudaEventRecord(start, 0);
@@ -93,43 +93,47 @@ int main(int argc, char** argv) {
     cudaEventElapsedTime(&elapsedTime, start, stop);
 
     size_t hpitch = n * sizeof(unsigned int);
-    CUDA_SAFE_CALL(cudaMemcpy2D(h_solutions, hpitch, d_solutions, dpitch,
-                                a * sizeof(unsigned int), // width
-                                numSolutions,                // height
-                                cudaMemcpyDeviceToHost));
+    // CUDA_SAFE_CALL(cudaMemcpy2D(h_solutions, hpitch, d_solutions, dpitch,
+    //                             a * sizeof(unsigned int), // width
+    //                             numSolutions,                // height
+    //                             cudaMemcpyDeviceToHost));
 
     printf("Processing time: %f (ms)\n", elapsedTime);
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
 
+    if (*count == numSolutions)
+        printf("All %d solutions found!\n", numSolutions);
+    else
+        printf("There is %d solutions and only %d is found  \n", numSolutions, count);
     // print answers
-    for (int i = 0; i < numSolutions; i++) {
-        unsigned int * solution = &h_solutions[i * n];
-        // i is which solution
-        printf("Solution %d is [", i);
-        for (int k = 0; k < a; k++) {
-            printf("%d%s", solution[k], (k < a-1) ? ", " : "]");
-        }
-        for (int j = 0, k = 0; j < n*n; j++) {
-            // j is which square of the chessboard (note each solution
-            // must be in sorted order)
-            // k is which queen we're placing (also index into the soln. array)
-            if (j % n == 0) {
-                printf("\n");
-            }
-            if (j == solution[k]) {
-                printf("Q");
-                k++;
-            } else {
-                printf(".");
-            }
-        }
-        printf("\n");
-    }
+    // for (int i = 0; i < numSolutions; i++) {
+    //     unsigned int * solution = &h_solutions[i * n];
+    //     // i is which solution
+    //     printf("Solution %d is [", i);
+    //     for (int k = 0; k < a; k++) {
+    //         printf("%d%s", solution[k], (k < a-1) ? ", " : "]");
+    //     }
+    //     for (int j = 0, k = 0; j < n*n; j++) {
+    //         // j is which square of the chessboard (note each solution
+    //         // must be in sorted order)
+    //         // k is which queen we're placing (also index into the soln. array)
+    //         if (j % n == 0) {
+    //             printf("\n");
+    //         }
+    //         if (j == solution[k]) {
+    //             printf("Q");
+    //             k++;
+    //         } else {
+    //             printf(".");
+    //         }
+    //     }
+    //     printf("\n");
+    // }
 
     // clean up memory
     // for 2x2 we don't need to free (h_solutions) at the end
-    free(h_solutions);
-    CUDA_SAFE_CALL(cudaFree(d_solutions));
+    // free(h_solutions);
+    // CUDA_SAFE_CALL(cudaFree(d_solutions));
     cudaFree(count);
 }

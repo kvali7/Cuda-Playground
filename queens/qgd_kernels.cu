@@ -9,8 +9,8 @@
 //  #define BOARDSIZE 6
 //  #define NUMQUEENS 3
  
- #define BOARDSIZE 8
- #define NUMQUEENS 5
+//  #define BOARDSIZE 4
+//  #define NUMQUEENS 2
  
   __global__
   void qgdKernel(int n, int a, bool one, bool all, int pitch,
@@ -25,11 +25,11 @@
         int bitcount = countBits(tid);
         if (bitcount != a) { return; }
     
+        int width = n;
 
-        int numQueens = NUMQUEENS;
-        int width = BOARDSIZE;
+        int numQueens = a;
         // create queens List for n = 4 the size of the proposed solution is 2
-        unsigned int queensList[NUMQUEENS] = {0};
+        unsigned int queensList[16] = {0};
         int temp = tid;
         for (unsigned int c = 0, qi = 0 ; temp ; temp >>= 1, c++){
             if (temp & 1){
@@ -48,8 +48,10 @@
         // else
         //     printf("This is not a Solution\n");
 
-        if (checkerFunc (queensList, width, numQueens)) 
+        if (checkerFunc (queensList, width, numQueens)) {
             addSolution (queensList,  numQueens, d_solutions, count, pitch);
+            
+        }
     }
   }
   
@@ -63,19 +65,7 @@
       int width = n;
       int numQueens = a;
       qgdKernel<<< 1<<8, 1<<8 >>>(width, numQueens, one, all, pitch, d_solutions, count);
-    //   qgdKernel<<< 1<<10, 1<<6 >>>(n, a, one, all, pitch, d_solutions, count)
-    int even = !(width % 2);
-    printf("Is it even? %d\n", even);
-    // printf("number of found solutions = %u\n", *count);
-
-    // unsigned int* solution = (unsigned int*) ((char*) d_solutions + solution_id * pitch);
-
-
-    // unsigned int* solution = (unsigned int*) (char*) d_solution ;
-    // // solution is of the form [a,b] where a<b and each number
-    // // is an index of a queen into the 1-dimensional n*n-element chessboard
-    // for (int q = 0 ; q < numQueens; q++){
-    //     solution[q] = queensList[q];
-    // }
+    //   qgdKernel<<< 1<<10, 1<<6 >>>(n, a, one, all, pitch, d_solutions, count);
+    
   }
   

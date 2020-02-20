@@ -38,11 +38,11 @@
   }
   
   unsigned long long solutionsTable[] = {
-      0, 1, 4, 1, 12, 186, 4, 86, 4860, 114, 8, 2, 8, 288
-      // https://oeis.org/A002564   (this is a(n))
-      // we have no numbers past this, please post them as you find them
-      // you will need to fill in this array as n gets bigger
-  };
+    0, 1, 4, 1, 12, 186, 4, 86, 4860, 114, 8, 2, 8, 288, 500, 500 , 500, 500 , 500, 500, 500, 500
+    // https://oeis.org/A002564   (this is a(n))
+    // we have no numbers past this, please post them as you find them
+    // you will need to fill in this array as n gets bigger
+};
   
   int main(int argc, char** argv) {
   
@@ -94,22 +94,18 @@
   
       size_t hpitch = a * sizeof(unsigned int);
   
-  
-    //    printf("preassigned size of h_solutions is %d\n", sizeof(h_solutions));
-    //    unsigned int* tempv = (unsigned int *) malloc(30);
-    //    printf("psize of rand int is %d\n", sizeof(tempv));
-    //    printf(" dpitch is %d\n hpitch is %d\n numSolutions is %d\n sizeof d_solutions is %d\n", dpitch, hpitch, numSolutions, sizeof(d_solutions));
-  
       CUDA_SAFE_CALL(cudaMemcpy2D(h_solutions, hpitch, d_solutions, dpitch,
           a * sizeof(unsigned int), // width
           numSolutions,                // height
           cudaMemcpyDeviceToHost));
   
-      printf("Processing time: %f (ms)\n", elapsedTime);
       cudaEventDestroy(start);
       cudaEventDestroy(stop);
-  
-      // print answers
+
+    //   unsigned long long int valcount;
+
+
+    //   // print answers
       int maxi = 0;
       if (all == true && one ==false)
         maxi = numSolutions;
@@ -140,7 +136,15 @@
             }
             printf("\n");
         }
-        
+
+
+        if (*count == numSolutions)
+        printf("All %llu solutions found!\n", numSolutions);
+    else
+        printf("Only %u solutions\n", *count);
+  
+        printf("Processing time: %f (ms)\n", elapsedTime);
+
   
       // clean up memory
       free(h_solutions);

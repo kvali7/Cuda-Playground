@@ -14,6 +14,7 @@ int combin(int m, int k) {
 
 __device__
 void queenGen(unsigned int* queensList, unsigned long long int i, int m, int k) {
+    //lex
     int q = 0;
     unsigned long long int r = i + 1;
     int j = 0;
@@ -28,5 +29,7 @@ void queenGen(unsigned int* queensList, unsigned long long int i, int m, int k) 
         queensList[q++] = cs - 1;
         j = cs;
     }
+
+    
 }
 

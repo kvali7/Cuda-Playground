@@ -46,7 +46,6 @@ __device__
 int addtoSolution (unsigned int* queensList, int numQueens, unsigned int* d_solution, unsigned int* count, int pitch){
     // claim one of the valid solutions
     int solution_id = atomicAdd(count, 1);
-    // printf("count = %d\n", solution_id);
 
     // // the below line sets solution = d_solution[solution_id]
     // solution is of the form [a,b] where a<b and each number
@@ -58,6 +57,7 @@ int addtoSolution (unsigned int* queensList, int numQueens, unsigned int* d_solu
     for (int q = 0 ; q < numQueens; q++){
         solution[q] = queensList[q];
     }
+
+
     return solution_id;
-    // return solution;
 }
